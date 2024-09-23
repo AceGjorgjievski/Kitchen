@@ -1,15 +1,20 @@
 import Link from "next/link";
 import {getCategoriesFromDb, saveCategories} from "./utils/categories.utils";
 import {Category} from "../../../backend/src/categories/category.model";
+import {Meal} from "../../../backend/src/meals/meal.model";
+import {saveAllMealsFromCategories} from "./utils/meals.utils";
 
 export default async function Home() {
 
   let categories: Category[] = await getCategoriesFromDb();
+  let meals: Meal [] = [];
 
-  console.log(categories.length);
   if(categories.length === 0) {
     await saveCategories();
-    categories = await getCategoriesFromDb();
+  }
+
+  if(meals.length === 0) {
+      await saveAllMealsFromCategories();
   }
 
 
