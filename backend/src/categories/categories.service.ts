@@ -18,22 +18,12 @@ export class CategoryService {
         }));
     }
 
-    // getAll(): Category [] {
-    //     return [...this.categories];
-    // }
-
-    // getById(id: number): Category | undefined {
-    //     const foundCategory: Category = this.categories.find((category) => category.id === id);
-
-    //     if(!foundCategory) {
-    //         throw new ConflictException(`Category does not exist with id: ${id}`);
-    //     }
-
-    //     return {...foundCategory};
-    // }
 
     async getById(id: number): Promise<Category | undefined> {
-        const foundCategory = await this.firestoreService.getDocument('categories', id.toString());
+
+        const categories = await this.getAll();
+
+        const foundCategory = categories.find((doc) => doc.id === id);
         if(!foundCategory) {
             throw new ConflictException(`Category does not exist with id: ${id}`);
         }
@@ -44,30 +34,12 @@ export class CategoryService {
         }
     }
 
-    // add(strCategory: string): Category {
-    //     const newId = this.categories.length + 1;
-    //     const newCategory : Category = {
-    //         id: newId,
-    //         strCategory: strCategory
-    //     }
 
-    //     this.categories.push(newCategory);
-
-    //     return newCategory;
-    // }
-
-    async add(strCategory: string): Promise<Category> {
-        const newId = this.categories.length + 1;
-        const newCategory: Category = {
-            id: newId,
-            strCategory: strCategory
-        }
-
-        console.log("came here", typeof(newCategory));
+    async add(newCategory: Category): Promise<Category> {
 
         const plainCategory = {
-            id: newId,
-            strCategory: strCategory
+            id: newCategory.id,
+            strCategory: newCategory.strCategory
         };
 
         await this.firestoreService.addDocument('categories', plainCategory);

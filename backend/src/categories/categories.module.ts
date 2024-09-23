@@ -7,7 +7,8 @@ import { FirestoreModule } from "src/firestore/firestore.module";
 @Module({
   imports: [FirestoreModule],
   controllers: [CategoryController],
-  providers: [CategoryService]
+  providers: [CategoryService],
+  exports: [CategoryService]
 })
 export class CategoryModule {
 

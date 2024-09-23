@@ -16,18 +16,18 @@ export class CategoryController {
     }
 
     @Post("add")
-    addCategory(@Body() category: Omit<Category, "id">): Promise<Category> {
-        const newCategory = this.categoryService.add(category.strCategory);
+    addCategory(@Body() category: Category): Promise<Category> {
+        const newCategory = this.categoryService.add(category);
 
         return newCategory;
     }
 
-    // @Get(":id")
-    // getById(@Param("id", ParseIntPipe) id: number) : Category {
-    //     const foundCategory = this.categoryService.getById(id);
+    @Get(":id")
+    getById(@Param("id", ParseIntPipe) id: number) : Promise<Category> {
+        const foundCategory = this.categoryService.getById(id);
 
-    //     return foundCategory;
-    // }
+        return foundCategory;
+    }
 
 
 }
