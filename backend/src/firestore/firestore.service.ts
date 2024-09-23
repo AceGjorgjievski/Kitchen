@@ -45,7 +45,8 @@ export class FirestoreService {
         return doc.exists ? doc.data() : null;
     }
 
-    async addDocument(collection: string, data: Category): Promise<void> {
+    async addDocument(collection: string, data: any): Promise<void> {
+        console.log("data: ", data);
         const collectionRef = this.firestore.collection(collection);
         await collectionRef.add(data);
     }
