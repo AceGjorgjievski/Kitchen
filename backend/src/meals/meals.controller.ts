@@ -10,27 +10,37 @@ export class MealsController {
 
 
     @Get()
-    getAll(): Meal [] {
+    getAll():  Promise<Meal[]> {
         const allMeals = this.mealsService.getAll();
         return allMeals;
     }
 
     @Get(":id")
-    getById(@Param("id") id: string) : Meal {
+    getById(@Param("id") id: string) : Promise<Meal> {
         const foundMeal = this.mealsService.getById(id);
 
         return foundMeal;
     }
 
-    @Get("category/:categoryId")
-    getAllByCategoryId(@Param("categoryId", ParseIntPipe) categoryId: number): Meal [] {
-        const foundMeals = this.mealsService.getAllByCategoryId(categoryId);
+    // @Get("category/:categoryId")
+    // getAllByCategoryId(@Param("categoryId", ParseIntPipe) categoryId: number): Promise<Meal[]> {
+    //     const foundMeals = this.mealsService.getAllByCategoryId(categoryId);
+    //
+    //     return foundMeals;
+    // }
 
-        return foundMeals;
+    @Get("/category/:strCategory")
+    getAllByStrCategory(@Param("strCategory") strCategory: string): Promise<Meal[]> {
+
+        const allMeals = this.mealsService.getAllByStrCategory(strCategory);
+
+        return allMeals;
     }
 
     @Post("add")
     add(@Body() meal: Meal) {
+        // console.log("meal backend: ", meal);
+        // return null;
         const newMeal = this.mealsService.addMeal(meal);
 
         return newMeal;
