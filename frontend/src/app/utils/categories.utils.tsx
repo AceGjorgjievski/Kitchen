@@ -1,9 +1,9 @@
+import {FULL_DOMAIN} from "./constants.utils";
 
-const DOMAIN_NAME = "http://localhost:";
-const PORT = 4000;
-const FULL_DOMAIN = DOMAIN_NAME + +PORT;
+
 const CATEGORIES_URL = "https://www.themealdb.com/api/json/v1/1/list.php?c=list";
 const BACKEND_URL_CATEGORIES = FULL_DOMAIN + "/categories";
+const BACKEND_URL_MEALS = FULL_DOMAIN + "/meals/category/";
 
 
 export const getCategoriesFromApi = async () => {
@@ -44,6 +44,25 @@ export const getCategoriesFromDb = async () => {
     const data = await response.json();
 
     return data;
+}
+
+export const getMealsByCategoryFromDb = async (category: string) => {
+        try {
+            const response = await fetch(BACKEND_URL_MEALS + category, {
+                method: 'GET',
+                cache: 'no-cache',
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch meals in [getMealsByCategoryFromDb]");
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error in getMealsByCategoryFromDb:", error.message);
+            throw error;
+        }
 }
 
 
