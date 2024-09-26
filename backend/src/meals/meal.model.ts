@@ -8,6 +8,7 @@ export class Meal {
         public strCategory: string,
         public rating: number,
         public reviews: number,
+        public price: number
     ) {
 
     }
