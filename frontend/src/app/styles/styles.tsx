@@ -4,7 +4,8 @@ import {makeStyles} from "@mui/styles";
 const useStyles = makeStyles((theme) => ({
     appBar: {
         backgroundImage: 'url(/images/background_image.jpg)',
-        position: "fixed"
+        position: "fixed",
+        border: "1px solid white"
     },
     textBig: {
         textAlign: "center",
@@ -37,10 +38,23 @@ const useStyles = makeStyles((theme) => ({
     cardMedia: {
         paddingTop: '56.25%'
     },
-    grid: {
+    gridContainer: {
         marginTop: '10px',
         padding: '40px 0'
-    }
+    },
+    boxModalStyle: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600,
+        height: 400,
+        backgroundColor: 'gray',
+        border: '2px solid #FFF',
+        padding: 4,
+        outline: 'none',
+        maxWidth: '1000px'
+    },
 }));
 
 export default useStyles;
