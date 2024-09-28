@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {ConfigService} from "@nestjs/config";
 import {FirebaseApp, initializeApp} from 'firebase/app';
 import {IConfig} from "../models/config.model";
 import {Auth, getAuth} from 'firebase/auth';
+import * as admin from 'firebase-admin';
+import {User} from "../models/User";
 
 @Injectable()
 export class FirebaseService {
@@ -21,6 +23,38 @@ export class FirebaseService {
             measurementId: configService.get<string>('measurementId'),
         })
         this.auth = getAuth(this.app);
+
+    }
+
+    async checkLoggedInUser(idToken: string): Promise<Omit<User, 'password'>> {
+        try {
+            // Verify the ID token
+            const decodedToken = await admin.auth().verifyIdToken(idToken);
+            // Retrieve the user record from Firebase
+            const userRecord = await admin.auth().getUser(decodedToken.uid);
+
+            const loggedInUser: Omit<User, "password" | "accessToken"> & { accessToken: string } = {
+                id: userRecord.uid,
+                email: userRecord.email,
+                name: userRecord.displayName,
+                role: 'user',
+                createdAt: userRecord.metadata.creationTime,
+                accessToken: idToken
+            };
+
+            return loggedInUser;
+        } catch (error) {
+            throw new UnauthorizedException('No valid user session found.');
+        }
+    }
+
+    async verifyToken(token: string) {
+        try {
+            const decodedToken = await admin.auth().verifyIdToken(token);
+            return decodedToken;
+        } catch (err) {
+            throw new UnauthorizedException('Invalid or expired token!');
+        }
     }
 
 }
