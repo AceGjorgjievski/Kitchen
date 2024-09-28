@@ -23,6 +23,7 @@ export class MealsService {
                 strCategory: doc.data().strCategory,
                 rating: doc.data().rating,
                 reviews: doc.data().reviews,
+                price: doc.data().price
             }));
 
             allMeals.push(...categoryMeals);
@@ -45,6 +46,7 @@ export class MealsService {
             strCategory: foundMeal.strCategory,
             rating: foundMeal.rating,
             reviews: foundMeal.reviews,
+            price: foundMeal.price
         };
     }
 
@@ -63,6 +65,7 @@ export class MealsService {
             strCategory: doc.data().strCategory,
             rating: doc.data().rating,
             reviews: doc.data().reviews,
+            price: doc.data().price
         }))
 
         return categoryMeals;
@@ -95,11 +98,13 @@ export class MealsService {
             strCategory: meal.strCategory,
             rating: meal.rating,
             reviews: meal.reviews,
+            price: meal.price
         };
 
 
-        await this.firestoreService.addDocument('meals' + newMeal.strCategory, newMeal); // Save to Firestore
+        await this.firestoreService.addDocument('meals' + newMeal.strCategory, null, newMeal); // Save to Firestore
 
+        console.log("meal added: ");
         return newMeal;
     }
 }
