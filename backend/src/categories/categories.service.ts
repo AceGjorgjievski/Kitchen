@@ -42,7 +42,8 @@ export class CategoryService {
             strCategory: newCategory.strCategory
         };
 
-        await this.firestoreService.addDocument('categories', plainCategory);
+        //todo
+        await this.firestoreService.addDocument('categories', null, plainCategory);
 
         return newCategory;
     }
