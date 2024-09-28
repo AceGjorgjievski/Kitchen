@@ -11,7 +11,9 @@ let categories: Category[] = await getCategoriesFromDb();
 
 
 export const getMealsByCategoryFromApi = async (category: Category) => {
-    const response = await fetch(`${MEALS_API_URL}${category.strCategory}`);
+    const response = await fetch(`${MEALS_API_URL}${category.strCategory}`, {
+        cache: 'no-cache'
+    });
     const data = await response.json();
 
     if (data.meals) {
@@ -22,7 +24,8 @@ export const getMealsByCategoryFromApi = async (category: Category) => {
             categoryId: category.id,
             strCategory: category.strCategory,
             reviews: Math.floor(Math.random() * 18) + 3,
-            rating: Math.floor(Math.random() * 5) + 1
+            rating: Math.floor(Math.random() * 5) + 1,
+            price: (Math.random() * (45 - 10) + 10).toFixed(2)
         }));
         return meals;
     }
@@ -31,17 +34,27 @@ export const getMealsByCategoryFromApi = async (category: Category) => {
 
 export const saveMeals = async (meals: any[]) => {
     for (const meal of meals) {
-        console.log("meal frontend: ", meal);
+        try {
+            console.log("meal frontend: ", meal);
 
-        await fetch(BACKEND_URL_MEALS + "/add", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(meal)
-        });
+            const response = await fetch(BACKEND_URL_MEALS + "/add", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(meal)
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Failed to save meal. Status: ${response.status}, Message: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error("Error saving meal:", error);
+        }
     }
-}
+};
+
 
 export const saveAllMealsFromCategories = async () => {
     for (const category of categories) {
@@ -70,10 +83,12 @@ export const getMealsFromDB = async () => {
 
 export const getMealsByCategoryFromDb = async (category: string) => {
     try {
-        const response = await fetch(BACKEND_URL_MEALS + category, {
+        const response = await fetch(BACKEND_URL_MEALS + "/category" + "/" + category, {
             method: 'GET',
             cache: 'no-cache',
         });
+
+        console.log("path: ", BACKEND_URL_MEALS + "/category" + category);
 
         if (!response.ok) {
             throw new Error("Failed to fetch meals in [getMealsByCategoryFromDb]");
