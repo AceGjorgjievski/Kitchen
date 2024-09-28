@@ -45,11 +45,13 @@ export class AuthService {
 
             const accessToken = await user.user.getIdToken();
 
+            const dbUser = await this.usersService.getUserByEmail(user.user.email);
+
             const loggedInUser: Omit<User, "password" | "accessToken"> & { accessToken: string } = {
                 id: user.user.uid,
                 email: user.user.email,
                 name: body.name,
-                role: "user",
+                role: dbUser.role,
                 createdAt: user.user.metadata.creationTime,
                 accessToken,
             };
