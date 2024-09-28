@@ -13,7 +13,6 @@ import {UserLoginDto} from "../models/UserLoginDto";
 import firebase from "firebase/compat";
 import AuthError = firebase.auth.AuthError;
 import {UsersService} from "../users/users.service";
-import {JwtService} from "@nestjs/jwt";
 import * as admin from 'firebase-admin';
 
 
@@ -22,8 +21,7 @@ export class AuthService {
 
     constructor(private readonly firebaseService: FirebaseService,
                 private readonly firestoreService: FirestoreService,
-                private readonly usersService: UsersService,
-                private readonly jwtService: JwtService) {
+                private readonly usersService: UsersService) {
     }
 
     async validateUser({ email, password }: UserLoginDto) {

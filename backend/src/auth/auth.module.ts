@@ -5,11 +5,10 @@ import {FirebaseService} from "../firebase/firebase.service";
 import {ConfigModule} from "@nestjs/config";
 import {FirestoreModule} from "../firestore/firestore.module";
 import {UsersModule} from "../users/users.module";
-import {JwtService} from "@nestjs/jwt";
 
 @Module({
   imports: [ConfigModule, FirestoreModule, UsersModule],
   controllers: [AuthController],
-  providers: [AuthService, FirebaseService, JwtService],
+  providers: [AuthService, FirebaseService],
 })
 export class AuthModule {}
