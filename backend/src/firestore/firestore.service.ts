@@ -45,9 +45,20 @@ export class FirestoreService {
         return doc.exists ? doc.data() : null;
     }
 
-    async addDocument(collection: string, data: any): Promise<void> {
+    async addDocument(collection: string, docId: string | null, data: any): Promise<void> {
         console.log("data: ", data);
+        //todo - change or not? - for docId
         const collectionRef = this.firestore.collection(collection);
-        await collectionRef.add(data);
+
+        if (docId) {
+            // If docId is provided, use set() to create a document with the given ID
+            const docRef = collectionRef.doc(docId);
+            await docRef.set(data);
+        } else {
+            // If no docId is provided, use add() to auto-generate the ID
+            await collectionRef.add(data);
+        }
+        console.log("user added");
     }
+
 }
