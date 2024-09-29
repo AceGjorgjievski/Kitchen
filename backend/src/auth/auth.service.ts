@@ -109,6 +109,7 @@ export class AuthService {
             const shoppingCart: ShoppingCart = {
                 id: user.uid,
                 userId: user.uid,
+                username: body.name,
                 shoppingCartItems: [],
                 createdAt: new Date().toDateString()
             }
