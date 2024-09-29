@@ -15,7 +15,7 @@ import firebase from "firebase/compat";
 import AuthError = firebase.auth.AuthError;
 import {UsersService} from "../users/users.service";
 import * as admin from 'firebase-admin';
-
+import {ShoppingCart} from "../models/ShoppingCart";
 
 @Injectable()
 export class AuthService {
@@ -61,6 +61,7 @@ export class AuthService {
                 role: dbUser.role,
                 createdAt: user.user.metadata.creationTime,
                 accessToken,
+                shoppingCartId: dbUser.shoppingCartId
             };
 
             return loggedInUser;
@@ -99,10 +100,20 @@ export class AuthService {
                 email: body.email,
                 id: user.uid,
                 role: "user",
-                createdAt: new Date().toDateString()
+                createdAt: new Date().toDateString(),
+                shoppingCartId: user.uid
             }
 
             await this.firestoreService.addDocument("users", user.uid, userData);
+
+            const shoppingCart: ShoppingCart = {
+                id: user.uid,
+                userId: user.uid,
+                shoppingCartItems: [],
+                createdAt: new Date().toDateString()
+            }
+
+            await this.firestoreService.addDocument("shoppingCarts", user.uid, shoppingCart);
 
             return userData;
         } catch (err) {
