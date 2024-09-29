@@ -39,7 +39,8 @@ export class FirebaseService {
                 name: userRecord.displayName,
                 role: 'user',
                 createdAt: userRecord.metadata.creationTime,
-                accessToken: idToken
+                accessToken: idToken,
+                shoppingCartId: userRecord.uid
             };
 
             return loggedInUser;
