@@ -5,7 +5,8 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     UserCredential,
-    signOut
+    signOut,
+    updateProfile
 } from 'firebase/auth';
 import {FirebaseService} from "../firebase/firebase.service";
 import {FirestoreService} from "../firestore/firestore.service";
@@ -47,10 +48,16 @@ export class AuthService {
 
             const dbUser = await this.usersService.getUserByEmail(user.user.email);
 
+            if(dbUser) {
+                await updateProfile(user.user, {
+                    displayName: dbUser.name
+                })
+            }
+
             const loggedInUser: Omit<User, "password" | "accessToken"> & { accessToken: string } = {
                 id: user.user.uid,
                 email: user.user.email,
-                name: body.name,
+                name: user.user.displayName,
                 role: dbUser.role,
                 createdAt: user.user.metadata.creationTime,
                 accessToken,
