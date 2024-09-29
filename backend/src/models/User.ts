@@ -6,7 +6,8 @@ export class User {
         public password: string,
         public id: string,
         public createdAt: string,
-        public role: string
+        public role: string,
+        public shoppingCartId: string
     ) {
     }
 }
