@@ -18,6 +18,7 @@ export class UsersService {
             id: doc.data().id,
             createdAt: doc.data().createdAt,
             role: doc.data().role,
+            shoppingCartId: doc.data().shoppingCartId
         }))
     }
 
