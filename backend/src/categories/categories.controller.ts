@@ -1,6 +1,7 @@
 import {Body, Controller, Get, Param, ParseIntPipe, Post} from "@nestjs/common";
 import {Category} from "./category.model";
 import {CategoryService} from "./categories.service";
+import {Public} from "../auth/decorators/public.decorator";
 
 
 @Controller("categories")
@@ -10,6 +11,7 @@ export class CategoryController {
 
 
     @Get()
+    @Public()
     getAllCategories(): Promise<Category []> {
         const allCategories = this.categoryService.getAll();
         return allCategories;
