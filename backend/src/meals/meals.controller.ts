@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from "@nestjs/common";
 import { Meal } from "./meal.model";
 import { MealsService } from "./meals.service";
+import {Public} from "../auth/decorators/public.decorator";
 
 
 
@@ -8,7 +9,7 @@ import { MealsService } from "./meals.service";
 export class MealsController {
     constructor(private readonly mealsService: MealsService) {}
 
-
+    @Public()
     @Get()
     getAll():  Promise<Meal[]> {
         const allMeals = this.mealsService.getAll();
@@ -29,6 +30,7 @@ export class MealsController {
     //     return foundMeals;
     // }
 
+    @Public()
     @Get("/category/:strCategory")
     getAllByStrCategory(@Param("strCategory") strCategory: string): Promise<Meal[]> {
 
