@@ -7,7 +7,6 @@ import {FULL_DOMAIN} from "./constants.utils";
 const MEALS_API_URL = "https://www.themealdb.com/api/json/v1/1/filter.php?c=";
 const BACKEND_URL_MEALS = FULL_DOMAIN + "/meals";
 
-let categories: Category[] = await getCategoriesFromDb();
 
 
 export const getMealsByCategoryFromApi = async (category: Category) => {
@@ -57,6 +56,8 @@ export const saveMeals = async (meals: any[]) => {
 
 
 export const saveAllMealsFromCategories = async () => {
+    let categories: Category[] = await getCategoriesFromDb();
+
     for (const category of categories) {
         const meals = await getMealsByCategoryFromApi(category);
 
