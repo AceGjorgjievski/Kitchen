@@ -1,7 +1,6 @@
 import {Box, Button, Modal, Typography} from "@mui/material";
 import * as React from "react";
 import useStyles from "../../styles/styles";
-import {useState} from "react";
 
 interface ProfileProps {
     open: any;
@@ -41,6 +40,9 @@ const Profile = ({user, logout, openProfileModal, setOpenProfileModal}: ProfileP
                     </Typography>
                     <Typography sx={{ mt: 1 }}>
                         <strong>Name:</strong> {user?.name || 'N/A'}
+                    </Typography>
+                    <Typography sx={{ mt: 1 }}>
+                        <strong>Role:</strong> {user?.role || 'N/A'}
                     </Typography>
                     <Button variant="contained" color="primary" onClick={handleLogout} sx={{ mt: 2 }}>
                         Logout
