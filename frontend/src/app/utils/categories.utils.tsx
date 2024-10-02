@@ -36,14 +36,27 @@ export const saveCategories = async () => {
 }
 
 export const getCategoriesFromDb = async () => {
-    const response = await fetch(BACKEND_URL_CATEGORIES, {
-        method: 'GET',
-        cache: 'no-cache'
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch(BACKEND_URL_CATEGORIES, {
+            method: 'GET',
+            cache: 'no-cache',
+        });
 
-    return data;
-}
+        // Check if the response is OK (status code 200-299)
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error("Failed to fetch categories:", error);
+
+        // Optionally, return an empty array or handle the error in a specific way
+        return [];
+    }
+};
 
 
 
