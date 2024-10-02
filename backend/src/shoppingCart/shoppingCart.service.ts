@@ -79,7 +79,8 @@ export class ShoppingCartService {
 
                 // Update the cart in Firestore
                 await this.firestoreService.update("shoppingCarts", body.shoppingCartId, {
-                    shoppingCartItems: cartDoc.shoppingCartItems
+                    shoppingCartItems: cartDoc.shoppingCartItems,
+                    totalPrice: (parseFloat(cartDoc.totalPrice) + body.price * body.quantity).toFixed(2)
                 });
             } else {
                 // Create a new cart if it doesn't exist
@@ -117,5 +118,21 @@ export class ShoppingCartService {
 
 
         return totalAmount;
+    }
+
+    async clearShoppingCartItems(authHeader: string): Promise<void> {
+
+        try {
+            const foundShoppingCartForCurrentUser = await this.getByUserId(authHeader);
+
+            foundShoppingCartForCurrentUser.shoppingCartItems = [];
+
+            await this.firestoreService.update("shoppingCarts", foundShoppingCartForCurrentUser.id, {
+                shoppingCartItems: foundShoppingCartForCurrentUser.shoppingCartItems
+            })
+
+        } catch (err) {
+            throw new ConflictException(`Failed to empty the shopping cart items for current user`)
+        }
     }
 }
