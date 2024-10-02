@@ -1,7 +1,7 @@
 import Link from "next/link";
 import * as React from 'react';
 import {AppBar, Box, Button, CssBaseline, Toolbar, Typography, Menu, MenuItem, Modal, Badge} from "@mui/material";
-import {SoupKitchenOutlined} from "@mui/icons-material";
+import {ManageAccounts, SoupKitchenOutlined} from "@mui/icons-material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
@@ -15,7 +15,7 @@ const Header = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const { user, shoppingCart, logout } = useAuth();
+    const {user, shoppingCart, logout} = useAuth();
     const [openShoppingCartDrawer, setOpenShoppingCartDrawer] = useState<boolean>(false);
     const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
 
@@ -72,62 +72,77 @@ const Header = () => {
                             <Button color="inherit" component={Link} href="/categories">
                                 Main Menu
                             </Button>
+                            {
+                                user &&
+                                <>
+                                    <Button color="inherit" component={Link} href="/orders">
+                                        Orders
+                                    </Button>
+                                </>
+                            }
                         </Box>
                         <Box sx={{flexGrow: 1}}/>
 
                         {
                             !user &&
-                                <>
-                                    <Button color="inherit" href="/login" onClick={handleClose}>
-                                        <PersonOffIcon/>
-                                    </Button>
-                                </>
+                            <>
+                                <Button color="inherit" href="/login" onClick={handleClose}>
+                                    <PersonOffIcon/>
+                                </Button>
+                            </>
 
                         }
                         {
                             user &&
-                                <>
-                                    <Button onClick={handleShoppingCartClick}>
-                                        <>
-                                            <Badge
-                                                badgeContent={
-                                                    user && shoppingCart && shoppingCart
-                                                        .shoppingCartItems
-                                                        .reduce((total, item) => total + item.quantity, 0)
-                                                }
-                                                color="error"
-                                            >
-                                                <ShoppingCartIcon style={{ color: "white" }} />
-                                            </Badge>
-                                        </>
-                                    </Button>
-                                    <Button color="inherit"
-                                            id="basic-button"
-                                            aria-controls={open ? 'basic-menu' : undefined}
-                                            aria-haspopup="true"
-                                            aria-expanded={open ? 'true' : undefined}
-                                            onClick={handleClickUser}>
-                                        <>
-                                            <PersonIcon/>
-                                        </>
-                                    </Button>
-                                    <Menu
-                                        id="basic-menu"
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        onClose={handleClose}
-                                        MenuListProps={{
-                                            'aria-labelledby': 'basic-button',
-                                        }}
-                                    >
-                                        <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
-                                        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                                    </Menu>
-                                    <ShoppingCartDrawer
-                                        open={openShoppingCartDrawer}
-                                        toggleDrawer={setOpenShoppingCartDrawer}
-                                    />
-                                </>
+                            <>
+                                <Button onClick={handleShoppingCartClick}>
+                                    <>
+                                        <Badge
+                                            badgeContent={
+                                                user && shoppingCart && shoppingCart
+                                                    .shoppingCartItems
+                                                    .reduce((total, item) => total + item.quantity, 0)
+                                            }
+                                            color="error"
+                                        >
+                                            <ShoppingCartIcon style={{color: "white"}}/>
+                                        </Badge>
+                                    </>
+                                </Button>
+                                <Button color="inherit"
+                                        id="basic-button"
+                                        aria-controls={open ? 'basic-menu' : undefined}
+                                        aria-haspopup="true"
+                                        aria-expanded={open ? 'true' : undefined}
+                                        onClick={handleClickUser}>
+                                    <>
+                                        {
+                                            user.role === 'user' ? (
+                                                <PersonIcon/>
+
+                                            ) : (
+                                                <ManageAccounts/>
+                                            )
+                                        }
+                                    </>
+                                </Button>
+                                <Menu
+                                    id="basic-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                    }}
+                                >
+                                    <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
+                                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                                </Menu>
+                                <ShoppingCartDrawer
+                                    open={openShoppingCartDrawer}
+                                    toggleDrawer={setOpenShoppingCartDrawer}
+                                />
+                            </>
 
                         }
                     </Toolbar>
