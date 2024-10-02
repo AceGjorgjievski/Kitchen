@@ -16,14 +16,6 @@ export class OrderController {
         return allOrders;
     }
 
-    @Get()
-    getByUser(
-        @Headers('Authorization') authHeader: string
-    ): Promise<Order> {
-        const foundOrder = this.orderService.findByUserId(authHeader);
-        return foundOrder;
-    }
-
     @Post("add")
     add(
         @Headers('Authorization') authHeader: string,

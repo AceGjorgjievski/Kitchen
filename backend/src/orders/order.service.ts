@@ -37,11 +37,6 @@ export class OrderService {
         return allOrders;
     }
 
-
-    findByUserId(authHeader: string): Promise<Order> {
-        return null;
-    }
-
     async add(body: OrderDto, authHeader: string): Promise<Order> {
         const token = authHeader.replace('Bearer ', '');
         if (!token) {
