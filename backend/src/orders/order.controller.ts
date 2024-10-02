@@ -33,4 +33,13 @@ export class OrderController {
 
         return addedOrder;
     }
+
+    @Get("currentUser")
+    async listAllOrdersForCurrentUser(
+        @Headers('Authorization') authHeader: string
+    ): Promise<Order[]> {
+        const allOrders = await this.orderService.listAllOrdersForCurrentUser(authHeader);
+
+        return allOrders;
+    }
 }
