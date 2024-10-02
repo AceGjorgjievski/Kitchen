@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Headers, Param, Post, UseGuards} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Headers, Param, Post, UseGuards} from "@nestjs/common";
 import {ShoppingCartService} from "./shoppingCart.service";
 import {ShoppingCart} from "../models/ShoppingCart";
 import {ShoppingCartDto} from "../models/ShoppingCartDto";
@@ -41,5 +41,14 @@ export class ShoppingCartController {
         await this.shoppingCartService.addMealToCart(body);
 
         return { message: 'Meal successfully added to shopping cart!' };
+    }
+
+    @Delete("clear")
+    async clearShoppingCartItems(
+        @Headers('Authorization') authHeader: string
+    ) : Promise<{message: string}> {
+        await this.shoppingCartService.clearShoppingCartItems(authHeader);
+
+        return { message: 'Shopping cart items cleared successfully' };
     }
 }
