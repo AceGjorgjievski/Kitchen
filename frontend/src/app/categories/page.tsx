@@ -7,7 +7,7 @@ import {getCategoriesFromApi, getCategoriesFromDb} from "../utils/categories.uti
 import useStyles from "../styles/styles";
 import {useEffect, useState} from "react";
 import {getMealsByCategoryFromDb} from "../utils/meals.utils";
-import {Meal} from "../../../../backend/dist/meals/meal.model";
+import {Meal} from "../types/types";
 import CategoryMealData from "../components/CategoryMealData";
 
 
