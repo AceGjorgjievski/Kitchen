@@ -55,7 +55,7 @@ const Categories = () => {
         <main>
             <Box sx={{mt: 8, textDecoration: "none"}}>
                 <Typography className={classes.textSmall}>
-                    hello
+                    Explore our specialties
                 </Typography>
                 <ButtonGroup variant="contained" aria-label="Basic button group" sx={{
                     display: 'flex',
