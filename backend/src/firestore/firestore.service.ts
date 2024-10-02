@@ -58,7 +58,6 @@ export class FirestoreService {
             // If no docId is provided, use add() to auto-generate the ID
             await collectionRef.add(data);
         }
-        console.log("user added");
     }
 
 }
