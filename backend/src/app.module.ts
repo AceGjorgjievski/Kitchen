@@ -10,13 +10,17 @@ import {AuthGuardService} from "./auth/guards/authGuard.service";
 import {FirebaseModule} from "./firebase/firebase.module";
 import {ConfigModule} from "@nestjs/config";
 import {UsersModule} from "./users/users.module";
+import {ShoppingCartModule} from "./shoppingCart/shoppingCart.module";
+import {OrderModule} from "./orders/order.module";
 
 @Module({
     imports: [CategoryModule, MealsModule, FirestoreModule,
         AuthModule, FirebaseModule, ConfigModule.forRoot({
             isGlobal: true
         }),
-        UsersModule
+        UsersModule,
+        ShoppingCartModule,
+        OrderModule
     ],
     controllers: [AppController],
     providers: [AppService,
