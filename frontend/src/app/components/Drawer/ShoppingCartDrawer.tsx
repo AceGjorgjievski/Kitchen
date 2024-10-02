@@ -57,7 +57,7 @@ export default function ShoppingCartDrawer({
             await addToOrder(
                 shoppingCart,
                 Number(totalPrice.toFixed(2)),
-                new Date().toDateString(),
+                new Date().toLocaleString(),
                 token
             );
             console.log("finishes adding in order");
