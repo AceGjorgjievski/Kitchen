@@ -1,5 +1,5 @@
 import {Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Modal, Rating, Typography} from "@mui/material";
-import {Meal} from "../../../../backend/dist/meals/meal.model";
+import {Meal} from "../types/types";
 import useStyles from "../styles/styles";
 import {useState} from "react";
 import Image from "next/image";

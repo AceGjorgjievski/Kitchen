@@ -1,6 +1,6 @@
 "use client";
 
-import { Category } from "../../../../backend/src/categories/category.model";
+import {Category} from "../types/types";
 import {Button, Grid} from "@mui/material";
 
 interface CategoryDataProps {
