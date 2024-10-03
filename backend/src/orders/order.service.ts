@@ -29,6 +29,8 @@ export class OrderService {
                     shoppingCartItems: data.shoppingCartItems,
                     createdAt: data.createdAt,
                     userId: data.userId,
+                    userName: data.userName,
+                    userEmail: data.userEmail,
                     orderState: data.orderState || OrderState.Issued // Default to 'Issued' if not set
                 });
             });
@@ -64,6 +66,8 @@ export class OrderService {
                 id: '',  // Generate unique order ID
                 totalPrice: body.totalPrice,
                 userId: currentUser.id,
+                userName: currentUser.name,
+                userEmail: currentUser.email,
                 shoppingCartItems: body.shoppingCartItems,
                 createdAt: body.createdAt,
                 orderState: OrderState.Issued
@@ -99,6 +103,8 @@ export class OrderService {
                 shoppingCartItems: data.shoppingCartItems,
                 createdAt: data.createdAt,
                 userId: data.userId,
+                userName: data.userName,
+                userEmail: data.userEmail,
                 orderState: data.orderState || OrderState.Issued
             } as Order;
         });
