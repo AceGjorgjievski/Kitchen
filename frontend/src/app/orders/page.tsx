@@ -15,32 +15,40 @@ const Orders = () => {
 
     const [orders, setOrders] = useState<Order[]>([])
     const router = useRouter();
-
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         const fetchOrdersForAdmins = async (token: string) => {
             const response = await fetchAllOrdersForAdmins(token);
-
             setOrders(response);
         }
 
         const fetchOrdersForNonAdmins = async (token: string) => {
             const response = await fetchAllOrdersForNonAdmins(token);
-
             setOrders(response);
         }
 
-        if(user) {
-            if(user.role === 'admin') {
-                fetchOrdersForAdmins(token);
-            } else {
-                fetchOrdersForNonAdmins(token);
+        const handleFetchOrders = async () => {
+            if (user) {
+                if (user.role === 'admin') {
+                    await fetchOrdersForAdmins(token);
+                } else {
+                    await fetchOrdersForNonAdmins(token);
+                }
+                setLoading(false);
             }
-        } else {
-            router.push("/login");
         }
-    }, [user]);
+
+        if (user === null) {
+            return;
+        }
+
+        if (!user) {
+            router.push("/login");
+        } else {
+            handleFetchOrders();
+        }
+    }, [user, token, router]);
 
     const updateOrderState = async (orderId: string, newState: OrderState) => {
         try {
