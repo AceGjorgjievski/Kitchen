@@ -5,6 +5,7 @@ import {IConfig} from "../models/config.model";
 import {Auth, getAuth} from 'firebase/auth';
 import * as admin from 'firebase-admin';
 import {User} from "../models/User";
+import {UsersService} from "../users/users.service";
 
 @Injectable()
 export class FirebaseService {
@@ -12,7 +13,8 @@ export class FirebaseService {
     public app: FirebaseApp;
     public auth: Auth
 
-    constructor(private readonly configService: ConfigService<IConfig>) {
+    constructor(private readonly configService: ConfigService<IConfig>,
+                private readonly usersService: UsersService) {
         this.app = initializeApp( {
             apiKey: configService.get<string>('apiKey'),
             authDomain: configService.get<string>('authDomain'),
@@ -42,6 +44,12 @@ export class FirebaseService {
                 accessToken: idToken,
                 shoppingCartId: userRecord.uid
             };
+
+            const foundUserInDb = await this.usersService.getUserByEmail(loggedInUser.email);
+
+            if(foundUserInDb) {
+                loggedInUser.role = foundUserInDb.role;
+            }
 
             return loggedInUser;
         } catch (error) {
