@@ -8,7 +8,7 @@ interface OrderTableShoppingCartItemProps {
 const OrderTableShoppingCartItem = ({item}: OrderTableShoppingCartItemProps) => {
     return (
         <>
-            <div key={item.mealId}>
+            <div>
                 {item.mealName} (Qty: {item.quantity}, Price: {item.price} USD)
             </div>
         </>

@@ -72,7 +72,7 @@ const OrderTable = ({orders, user, handleOrderStateChange}: OrderTableProps) => 
                                     </TableCell>
                                     <TableCell align="right" sx={{color: 'white'}}>
                                         {order.shoppingCartItems.map(item => (
-                                            <OrderTableShoppingCartItem item={item}/>
+                                            <OrderTableShoppingCartItem key={item.mealId} item={item}/>
                                         ))}
                                     </TableCell>
                                     <TableCell align="right" sx={{color: 'white'}}>
