@@ -51,4 +51,16 @@ export class ShoppingCartController {
 
         return { message: 'Shopping cart items cleared successfully' };
     }
+
+    @Delete("removeShoppingCartItem")
+    async removeShoppingCartItem(
+        @Headers('Authorization') authHeader: string,
+        @Body() body: ShoppingCartDto
+    ) : Promise<{message: string}> {
+
+        await this.shoppingCartService.removeShoppingCartItem(authHeader, body);
+
+        return { message: 'Shopping cart item removed successfully' };
+
+    }
 }

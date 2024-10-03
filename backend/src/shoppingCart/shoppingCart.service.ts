@@ -120,6 +120,19 @@ export class ShoppingCartService {
         return totalAmount;
     }
 
+    calculateTotalPriceFromShoppingCart(shoppingCartDtos: ShoppingCartDto []): number {
+        var totalAmount = 0;
+
+        for(const shoppingCartItem of shoppingCartDtos) {
+            var totalPriceInShoppingCart = shoppingCartItem.price * shoppingCartItem.quantity;
+
+            totalAmount += totalPriceInShoppingCart;
+        }
+
+
+        return totalAmount;
+    }
+
     async clearShoppingCartItems(authHeader: string): Promise<void> {
 
         try {
@@ -134,5 +147,28 @@ export class ShoppingCartService {
         } catch (err) {
             throw new ConflictException(`Failed to empty the shopping cart items for current user`)
         }
+    }
+
+    async removeShoppingCartItem(authHeader: string, body: ShoppingCartDto) {
+        try {
+            const foundShoppingCartForCurrentUser = await this.getByUserId(authHeader);
+
+
+            const updatedCartItems = foundShoppingCartForCurrentUser.shoppingCartItems.filter(
+                (item) => item.mealId !== body.mealId
+            );
+
+            if (updatedCartItems.length === 0) {
+                foundShoppingCartForCurrentUser.totalPrice = 0;
+            }
+
+            await this.firestoreService.update("shoppingCarts", foundShoppingCartForCurrentUser.id, {
+                shoppingCartItems: updatedCartItems,
+                totalPrice: this.calculateTotalPriceFromShoppingCart(updatedCartItems)
+            });
+        } catch (err) {
+            throw new ConflictException(`Failed to remove shopping cart item: ${err.message}`);
+        }
+
     }
 }
