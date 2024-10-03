@@ -8,6 +8,8 @@ export class Order {
         public shoppingCartItems: ShoppingCartDto[],
         public createdAt: string,
         public userId: string,
+        public userName: string,
+        public userEmail: string,
         public orderState: OrderState
     ) {
     }
