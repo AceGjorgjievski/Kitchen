@@ -13,7 +13,10 @@ import {Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {addToOrder} from "../../utils/orders.utils";
 import {useRouter} from "next/navigation";
-import {emptyShoppingCartItems} from "../../utils/shoppingCart.utils";
+import {emptyShoppingCartItems, removeItemFromShoppingCart} from "../../utils/shoppingCart.utils";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import {ShoppingCartItems} from "../../types/types";
 
 interface ShoppingCartDrawerProps {
     open: boolean;
@@ -68,6 +71,16 @@ export default function ShoppingCartDrawer({
         }
     }
 
+    const handleDelete = async (item: ShoppingCartItems) => {
+        console.log("enters deleting")
+        if(user) {
+            await removeItemFromShoppingCart(item, token);
+            fetchShoppingCart();
+        } else {
+            router.push("/login");
+        }
+    }
+
     const list = () => (
         <Box
             sx={{ width: 350, height: '100%', display: 'flex', flexDirection: 'column' }}
@@ -88,6 +101,14 @@ export default function ShoppingCartDrawer({
                                         primary={`Meal Name: ${item.mealName}`}
                                         secondary={`Quantity: ${item.quantity} | Price: $${!isNaN(parseFloat(item.price)) ? parseFloat(item.price).toFixed(2) : 'N/A'}`}
                                     />
+                                    <ListItemText>
+                                        <IconButton aria-label="delete" size="large" onClick={(event) => {
+                                            event.stopPropagation();
+                                            handleDelete(item)
+                                        }}>
+                                            <DeleteIcon sx={{color: 'black'}}/>
+                                        </IconButton>
+                                    </ListItemText>
                                 </ListItemButton>
                             </ListItem>
                         ))
