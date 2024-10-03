@@ -111,7 +111,8 @@ export class AuthService {
                 userId: user.uid,
                 username: body.name,
                 shoppingCartItems: [],
-                createdAt: new Date().toDateString()
+                createdAt: new Date().toDateString(),
+                totalPrice: 0
             }
 
             await this.firestoreService.addDocument("shoppingCarts", user.uid, shoppingCart);
