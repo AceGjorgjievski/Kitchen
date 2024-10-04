@@ -1,10 +1,10 @@
-import {ConflictException, Injectable, UnauthorizedException} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {Order} from "../models/Order";
 import {OrderDto} from "../models/OrderDto";
 import {FirestoreService} from "../firestore/firestore.service";
 import {FirebaseService} from "../firebase/firebase.service";
 import {OrderState} from "../models/enums/OrderState";
-
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class OrderService {
@@ -63,7 +63,7 @@ export class OrderService {
 
             // Add the new order to the 'orders' subcollection under the user document
             const newOrder: Order = {
-                id: '',  // Generate unique order ID
+                id: uuidv4(),
                 totalPrice: body.totalPrice,
                 userId: currentUser.id,
                 userName: currentUser.name,
@@ -110,6 +110,41 @@ export class OrderService {
         });
 
         return orders;
+    }
+
+    async updateOrderState(authHeader: string, body: any): Promise<Partial<Order>> {
+        const token = authHeader.replace('Bearer ', '');
+        if (!token) {
+            throw new UnauthorizedException('No token provided');
+        }
+
+        const { order, newState } = body;
+
+        try {
+
+            const userOrders = await this.firestoreService.getDocuments(`orders/${order.userId}/orders`);
+
+            const targetOrder = userOrders.find(o => o.id === order.id);
+
+            const targetOrderData = targetOrder.data();
+
+            if (!targetOrderData) {
+                throw new NotFoundException(`Order with ID ${order.id} not found`);
+            }
+
+            const updatedOrder = {
+                ...targetOrderData,
+                orderState: newState
+            };
+
+
+            await this.firestoreService.update(`orders/${order.userId}/orders`, order.id, updatedOrder);
+
+            return updatedOrder;
+
+        } catch (err) {
+            throw new ConflictException(`Error updating order state with id: ${order.id}`);
+        }
     }
 
 }
