@@ -61,7 +61,7 @@ const OrderTable = ({orders, user, handleOrderStateChange}: OrderTableProps) => 
                                         user && user.role === 'admin' &&
                                         (
                                             <>
-                                                <TableCell component="th" scope="row" sx={{color: 'white'}}>
+                                                <TableCell align={"right"} component="th" scope="row" sx={{color: 'white'}}>
                                                     {order.userEmail}
                                                 </TableCell>
                                             </>
