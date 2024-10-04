@@ -1,6 +1,6 @@
 "use client";
 
-import {Box, Typography, ButtonGroup, Button, Grid} from "@mui/material";
+import {Box, Typography, ButtonGroup, Button, Grid, CircularProgress} from "@mui/material";
 import {Category} from "../../../../backend/src/categories/category.model";
 import CategoryData from "../components/CategoryData";
 import {getCategoriesFromApi, getCategoriesFromDb} from "../utils/categories.utils";
@@ -15,6 +15,7 @@ const Categories = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [meals, setMeals] = useState<Meal[]>([]);
     const classes = useStyles();
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -36,11 +37,14 @@ const Categories = () => {
     }, []);
 
     const handleCategoryClick = async (categoryId) => {
+        setLoading(true);
         const mealsForCategory = await getMealsByCategoryFromDb(categoryId);
         setMeals(mealsForCategory);
+        setLoading(false);
     };
 
     const handleSettingAllMeals = async () => {
+        setLoading(true);
         const allCategories: Category[] = await getCategoriesFromApi();
         const allMeals: Meal[] = [];
         for(const category of allCategories) {
@@ -48,6 +52,7 @@ const Categories = () => {
             allMeals.push(...mealsByCategory);
         }
         setMeals(allMeals);
+        setLoading(false);
     }
 
 
@@ -83,7 +88,13 @@ const Categories = () => {
                         </Grid>
                     </Box>
                 </ButtonGroup>
-                <CategoryMealData meals={meals}/>
+                {loading ? (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+                        <CircularProgress />
+                    </Box>
+                ) : (
+                    <CategoryMealData meals={meals} />
+                )}
             </Box>
         </main>
     );
