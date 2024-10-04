@@ -1,5 +1,6 @@
 import { FULL_DOMAIN } from "./constants.utils";
 import { useAuth } from "../../context/auth.context";
+import {ShoppingCartItems} from "../types/types";
 
 const BACKEND_URL_SHOPPING_CART = FULL_DOMAIN + "/shoppingCart";
 
@@ -119,3 +120,31 @@ export const emptyShoppingCartItems = async (token: string) => {
         console.log("Error clearing shopping cart items");
     }
 }
+
+
+export const removeItemFromShoppingCart = async (item: ShoppingCartItems, token: string) => {
+    try {
+        console.log("body: ", JSON.stringify(item))
+        const response = await fetch(BACKEND_URL_SHOPPING_CART + "/removeShoppingCartItem", {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(item)
+        })
+
+        if(!response.ok) {
+            console.log("Error removing shopping cart item");
+        }
+
+        const data = await response.json();
+
+        return data;
+
+    } catch (err) {
+        console.log("Error removing shopping cart item");
+    }
+}
+
+

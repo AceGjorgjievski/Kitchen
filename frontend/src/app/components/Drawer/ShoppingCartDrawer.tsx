@@ -9,7 +9,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {useAuth} from "../../../context/auth.context";
-import {Typography} from "@mui/material";
+import {Grid, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import {addToOrder} from "../../utils/orders.utils";
 import {useRouter} from "next/navigation";
@@ -94,21 +94,37 @@ export default function ShoppingCartDrawer({
                         shoppingCart.shoppingCartItems.map((item, index) => (
                             <ListItem key={item.mealId} disablePadding>
                                 <ListItemButton>
-                                    <ListItemIcon>
-                                        <img src={item.mealImage} alt={item.mealId} style={{ width: 50, height: 50 }} />
-                                    </ListItemIcon>
-                                    <ListItemText
-                                        primary={`Meal Name: ${item.mealName}`}
-                                        secondary={`Quantity: ${item.quantity} | Price: $${!isNaN(parseFloat(item.price)) ? parseFloat(item.price).toFixed(2) : 'N/A'}`}
-                                    />
-                                    <ListItemText>
-                                        <IconButton aria-label="delete" size="large" onClick={(event) => {
-                                            event.stopPropagation();
-                                            handleDelete(item)
-                                        }}>
-                                            <DeleteIcon sx={{color: 'black'}}/>
-                                        </IconButton>
-                                    </ListItemText>
+                                    <Grid container >
+                                        <Grid item xs={11}>
+                                            <Grid container >
+                                                <Grid item>
+                                                    <ListItemIcon>
+                                                        <img src={item.mealImage} alt={item.mealId} style={{ width: 50, height: 50 }} />
+                                                    </ListItemIcon>
+                                                </Grid>
+
+                                                <Grid item>
+                                                    <ListItemText
+                                                        primary={item.mealName}
+                                                        secondary={`Quantity: ${item.quantity} | Price: $${!isNaN(parseFloat(item.price)) ? parseFloat(item.price).toFixed(2) : 'N/A'}`}
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid item xs={1} container justifyContent="flex-end">
+                                            <IconButton
+                                                aria-label="delete"
+                                                size="large"
+                                                onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    handleDelete(item);
+                                                }}
+                                            >
+                                                <DeleteIcon sx={{ color: 'black' }} />
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
                                 </ListItemButton>
                             </ListItem>
                         ))
