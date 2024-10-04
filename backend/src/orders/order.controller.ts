@@ -34,4 +34,14 @@ export class OrderController {
 
         return allOrders;
     }
+
+    @Post("updateOrderState")
+    async updateOrderState (
+        @Headers('Authorization') authHeader: string,
+        @Body() body: any
+    ): Promise<Partial<Order>> {
+        const updatedOrder = await this.orderService.updateOrderState(authHeader, body);
+
+        return updatedOrder;
+    }
 }
