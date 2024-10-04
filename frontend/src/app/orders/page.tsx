@@ -48,13 +48,18 @@ const Orders = () => {
         } else {
             handleFetchOrders();
         }
-    }, [user, token, router]);
+    }, [user, token, router, orders]);
 
-    const updateOrderState = async (orderId: string, newState: OrderState) => {
+    const updateOrderState = async (order: Order, newState: OrderState) => {
         try {
             // Call an API to update the order state in the backend
-            await updateOrderStateBackend(orderId, newState, token);
-            console.log(`Order ${orderId} updated to state ${newState}`);
+            await updateOrderStateBackend(order, newState, token);
+            console.log(`Order ${order.id} updated to state ${newState}`);
+            const response = user.role === 'admin'
+                ? await fetchAllOrdersForAdmins(token)
+                : await fetchAllOrdersForNonAdmins(token);
+
+            setOrders(response);
         } catch (error) {
             console.error("Failed to update order state", error);
         }

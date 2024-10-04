@@ -12,7 +12,7 @@ import React, {useState} from "react";
 interface OrderTableProps {
     orders: Order[];
     user: User;
-    handleOrderStateChange: (orderId: string, newState: OrderState) => void;
+    handleOrderStateChange: (order: Order, newState: OrderState) => void;
 }
 
 const OrderTable = ({orders, user, handleOrderStateChange}: OrderTableProps) => {
@@ -22,7 +22,7 @@ const OrderTable = ({orders, user, handleOrderStateChange}: OrderTableProps) => 
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>, order: Order) => {
         const newState = event.target.value as OrderState;
         setSelectedOrderState(newState);
-        handleOrderStateChange(order.id, newState);
+        handleOrderStateChange(order, newState);
     };
 
 
@@ -82,7 +82,7 @@ const OrderTable = ({orders, user, handleOrderStateChange}: OrderTableProps) => 
                                         user && user.role === 'admin' ? (
                                             <TableCell align="right" sx={{color: 'white'}}>
                                                 <Select
-                                                    value={selectedOrderState}
+                                                    value={order.orderState}
                                                     onChange={(e) => {
                                                         handleChange(e, order);
                                                     }}

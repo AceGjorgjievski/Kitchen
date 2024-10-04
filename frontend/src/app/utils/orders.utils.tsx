@@ -1,5 +1,5 @@
 import {FULL_DOMAIN} from "./constants.utils";
-import {OrderState} from "../types/types";
+import {Order, OrderState} from "../types/types";
 
 const BACKEND_ORDER_URL = FULL_DOMAIN + "/orders";
 
@@ -82,14 +82,21 @@ export const fetchAllOrdersForNonAdmins = async (token: string) => {
     }
 }
 
-export const updateOrderStateBackend = async (orderId: string, newState: OrderState, token: string) => {
+export const updateOrderStateBackend = async (order: Order, newState: OrderState, token: string) => {
     try {
+
+        const orderData = {
+            "order": order,
+            "newState": newState,
+        }
+
         const response = await fetch(BACKEND_ORDER_URL + "/updateOrderState", {
-            method: 'GET',
-            cache: 'no-cache',
+            method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`
-            }
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
         })
 
         if(!response.ok) {
