@@ -1,19 +1,42 @@
 "use client";
 
-import {Box, Chip, Paper, Switch} from "@mui/material";
-import {useState} from "react";
+import {Box, Chip, CircularProgress, Paper, Switch} from "@mui/material";
+import {useEffect, useState} from "react";
 import LockIcon from '@mui/icons-material/Lock';
 import FaceIcon from '@mui/icons-material/Face';
 
 import SignUp from '../components/SignUp/signUp'
 import LogIn from "../components/Login/login";
+import {useAuth} from "../../context/auth.context";
+import {useRouter} from "next/navigation";
 
 const Login = () => {
     const [checked, setChecked] = useState(true);
+    const {user, isLoading} = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if(!isLoading) {
+            if(user) {
+                router.push("/")
+            }
+        }
+
+
+    }, [user, isLoading])
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
+
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
 
     return (
         <>
