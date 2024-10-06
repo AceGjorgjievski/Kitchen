@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "./components/Header/Header";
 import Image from "next/image";
 import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
+import {AuthProvider} from "../context/auth.context";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,10 +41,12 @@ export default function RootLayout({
           />
       </div>
       <AppRouterCacheProvider>
-          <div className="content-wrapper">
-              <Header/>
-              {children}
-          </div>
+          <AuthProvider>
+              <div className="content-wrapper">
+                  <Header/>
+                  {children}
+              </div>
+          </AuthProvider>
       </AppRouterCacheProvider>
       </body>
     </html>
