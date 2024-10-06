@@ -35,10 +35,11 @@ export class MealsController {
     getAllByStrCategory(@Param("strCategory") strCategory: string): Promise<Meal[]> {
 
         const allMeals = this.mealsService.getAllByStrCategory(strCategory);
-
+        console.log("all meals: ", allMeals);
         return allMeals;
     }
 
+    @Public()
     @Post("add")
     add(@Body() meal: Meal) {
         // console.log("meal backend: ", meal);

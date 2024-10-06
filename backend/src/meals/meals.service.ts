@@ -1,21 +1,24 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import { Meal } from "./meal.model";
-import { FirestoreService } from "src/firestore/firestore.service";
-import {Category} from "../categories/category.model";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import {Meal} from "./meal.model";
+import {FirestoreService} from "src/firestore/firestore.service";
 import {CategoryService} from "../categories/categories.service";
 
 @Injectable()
 export class MealsService {
     constructor(private readonly firestoreService: FirestoreService,
-                private readonly categoryService: CategoryService) {}
+                private readonly categoryService: CategoryService) {
+    }
+
 
     async getAll(): Promise<Meal[]> {
-        const allMeals: Meal [] = [];
-        const allCategories : Category[] = await this.categoryService.getAll();
+        const allMeals: Meal[] = [];
+        const allMealCategories = await this.firestoreService.getDocuments("meals");
 
-        for(const category of allCategories) {
-            const meals = await this.firestoreService.getDocuments('meals'+category.strCategory);
-            const categoryMeals = meals.map(doc => ({
+        for (const mealCategory of allMealCategories) {
+            const fetchedMeals =
+                await this.firestoreService.getDocuments(`meals/${mealCategory}/${mealCategory}Collection/`)
+
+            const categoryMeals = fetchedMeals.map(doc => ({
                 idMeal: doc.data().idMeal,
                 strMeal: doc.data().strMeal,
                 strMealThumb: doc.data().strMealThumb,
@@ -24,11 +27,10 @@ export class MealsService {
                 rating: doc.data().rating,
                 reviews: doc.data().reviews,
                 price: doc.data().price
-            }));
+            }))
 
             allMeals.push(...categoryMeals);
         }
-
         return allMeals;
     }
 
@@ -50,25 +52,31 @@ export class MealsService {
         };
     }
 
-    async getAllByStrCategory(strCategory: string): Promise<Meal[]> {
 
-        const meals = await this.firestoreService.getDocuments('meals' + strCategory);
-        if(!meals || meals.length === 0) {
-            throw new NotFoundException(`No meals found with category: ${strCategory}`)
-        }
+    async getAllByStrCategory(strCategory: string) : Promise<Meal[]> {
 
-        const categoryMeals = meals.map(doc => ({
-            idMeal: doc.data().idMeal,
-            strMeal: doc.data().strMeal,
-            strMealThumb: doc.data().strMealThumb,
-            categoryId: doc.data().categoryId,
-            strCategory: doc.data().strCategory,
-            rating: doc.data().rating,
-            reviews: doc.data().reviews,
-            price: doc.data().price
-        }))
+        const allMealsByCategory = [];
 
-        return categoryMeals;
+            const mealsByCategory =
+                await this.firestoreService
+                    .getDocuments(`meals/${strCategory}/${strCategory}Collection`);
+
+            mealsByCategory.map(doc => {
+                const data = doc.data();
+                allMealsByCategory.push({
+                    idMeal: data.idMeal,
+                    strMeal: data.strMeal,
+                    strMealThumb: data.strMealThumb,
+                    categoryId: data.categoryId,
+                    strCategory: data.strCategory,
+                    rating: data.rating,
+                    reviews: data.reviews,
+                    price: data.price
+                })
+            })
+
+        return allMealsByCategory;
+
     }
 
     async getAllByCategoryId(categoryId: number): Promise<Meal[]> {
@@ -82,29 +90,32 @@ export class MealsService {
         return foundMeals;
     }
 
-    async addMeal(meal: Meal): Promise<Meal> {
 
+    async addMeal(meal: Meal): Promise<Meal> {
         const meals: Meal[] = await this.getAll();
         const foundMeal: Meal | undefined = meals.find(existingMeal => existingMeal.idMeal === meal.idMeal);
         if (foundMeal) {
             throw new ConflictException(`Meal with id: ${meal.idMeal} already exists`);
         }
+        try {
+            const mealCategoriesDoc =
+                await this.firestoreService
+                    .getDocuments(`meals/${meal.strCategory}/${meal.strCategory}Collection`)
 
-        const newMeal: Meal = {
-            idMeal: meal.idMeal,
-            strMeal: meal.strMeal,
-            strMealThumb: meal.strMealThumb,
-            categoryId: meal.categoryId,
-            strCategory: meal.strCategory,
-            rating: meal.rating,
-            reviews: meal.reviews,
-            price: meal.price
-        };
+            if(!mealCategoriesDoc) {
+                await this.firestoreService.addDocument(`${meal.strCategory}Collection`, meal.idMeal, {
+                    mealId: meal.idMeal
+                });
+            }
 
+            await this.firestoreService
+                .addDocument(`meals/${meal.strCategory}/${meal.strCategory}Collection`,null, meal)
 
-        await this.firestoreService.addDocument('meals' + newMeal.strCategory, null, newMeal); // Save to Firestore
+            console.log("meal added: ", meal);
 
-        console.log("meal added: ");
-        return newMeal;
+            return meal;
+        } catch (err) {
+            throw new ConflictException(`Error adding meal with id: ${meal.idMeal}`)
+        }
     }
 }
