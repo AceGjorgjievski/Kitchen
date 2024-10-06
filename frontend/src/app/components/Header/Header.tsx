@@ -1,23 +1,47 @@
 import Link from "next/link";
 import * as React from 'react';
-import {AppBar, Box, Button, CssBaseline, Toolbar, Typography, Menu, MenuItem, Modal, Badge} from "@mui/material";
+import {
+    AppBar,
+    Box,
+    Button,
+    CssBaseline,
+    Toolbar,
+    Typography,
+    Menu,
+    MenuItem,
+    Modal,
+    Badge,
+    CircularProgress
+} from "@mui/material";
 import {ManageAccounts, SoupKitchenOutlined} from "@mui/icons-material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import PersonIcon from '@mui/icons-material/Person';
 import useStyles from "../../styles/styles";
 import {useAuth} from "../../../context/auth.context";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ShoppingCartDrawer from "../Drawer/ShoppingCartDrawer";
 import Profile from "../Profile/Profile";
+import {useRouter} from "next/navigation";
 
 const Header = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const {user, shoppingCart, logout} = useAuth();
+    const {user, shoppingCart, logout, isLoading} = useAuth();
     const [openShoppingCartDrawer, setOpenShoppingCartDrawer] = useState<boolean>(false);
     const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
+    const router = useRouter();
+
+
+    useEffect(() => {
+        if (!isLoading) {
+            if (!user) {
+                router.push("/login");
+            }
+        }
+
+    }, [user, isLoading])
 
     const handleClickUser = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -43,6 +67,10 @@ const Header = () => {
 
     const handleShoppingCartClick = () => {
         setOpenShoppingCartDrawer((prevState) => !prevState)
+    }
+
+    if(isLoading) {
+        return null;
     }
 
     return (
@@ -73,7 +101,7 @@ const Header = () => {
                                 Main Menu
                             </Button>
                             {
-                                user &&
+                                user && !isLoading &&
                                 <>
                                     <Button color="inherit" component={Link} href="/orders">
                                         Orders
@@ -93,7 +121,7 @@ const Header = () => {
 
                         }
                         {
-                            user &&
+                            user && !isLoading &&
                             <>
                                 <Button onClick={handleShoppingCartClick}>
                                     <>
