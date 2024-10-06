@@ -1,4 +1,15 @@
-import {Box, Button, Card, CardActions, CardContent, CardMedia, Grid, Modal, Rating, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    CardMedia,
+    Grid,
+    Modal,
+    Rating,
+    Typography
+} from "@mui/material";
 import {Meal} from "../types/types";
 import useStyles from "../styles/styles";
 import {useState} from "react";
@@ -67,9 +78,9 @@ const CategoryMealData = ({meals}: CategoryMealDataProps) => {
     return (
         <Box>
             <Grid container spacing={4} className={classes.gridContainer}>
-                {meals.map((meal) => {
+                {meals.map((meal, index) => {
                         return (
-                            <Grid item key={meal.idMeal} xs={12} sm={6} md={4}>
+                            <Grid item key={meal.idMeal || index} xs={12} sm={6} md={4}>
                                 <Card className={classes.card}>
                                     <CardMedia
                                         className={classes.cardMedia}
