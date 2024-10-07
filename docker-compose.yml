@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  nextjs:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nextjs
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_FIRESTORE_PROJECT_ID=${NEXT_PUBLIC_PROJECT_ID}
+      - NEXT_PUBLIC_FIRESTORE_KEY_FILE=${NEXT_PUBLIC_API_KEY}
+    depends_on:
+      - nestjs
+
+  nestjs:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nestjs
+    ports:
+      - "4000:4000"
+    environment:
+      - FIRESTORE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIRESTORE_KEY_FILE=${FIRESTORE_KEY_FILE}
