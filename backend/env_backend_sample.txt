@@ -1,0 +1,14 @@
+create .env file in the backend folder containing the following environment variables from
+your firebase account & also download the serviceAccountKey.json file from firebase admin
+
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
+apiKey=
+authDomain=
+projectId=
+storageBucket=
+messagingSenderId=
+appId=
+measurementId=
+FIRESTORE_KEY_FILE=path/to/your/config/serviceAccountKey.json
