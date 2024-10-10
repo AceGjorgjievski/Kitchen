@@ -16,6 +16,8 @@ const Categories = () => {
     const [meals, setMeals] = useState<Meal[]>([]);
     const classes = useStyles();
     const [loading, setLoading] = useState<boolean>(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCategoryAll, setSelectedCategoryAll] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -38,6 +40,8 @@ const Categories = () => {
 
     const handleCategoryClick = async (categoryId) => {
         setLoading(true);
+        setSelectedCategory(categoryId);
+        setSelectedCategoryAll(false);
         const mealsForCategory = await getMealsByCategoryFromDb(categoryId);
         setMeals(mealsForCategory);
         setLoading(false);
@@ -45,9 +49,11 @@ const Categories = () => {
 
     const handleSettingAllMeals = async () => {
         setLoading(true);
+        setSelectedCategoryAll(true);
+        setSelectedCategory(null);
         const allCategories: Category[] = await getCategoriesFromApi();
         const allMeals: Meal[] = [];
-        for(const category of allCategories) {
+        for (const category of allCategories) {
             const mealsByCategory: Meal[] = await getMealsByCategoryFromDb(category.strCategory);
             allMeals.push(...mealsByCategory);
         }
@@ -59,7 +65,12 @@ const Categories = () => {
     return (
         <main>
             <Box sx={{mt: 8, textDecoration: "none"}}>
-                <Typography className={classes.textSmall}>
+                <Typography className={classes.textSmall} sx={{
+                    color: 'whitesmoke',
+                    fontFamily: 'Montserrat',
+                    fontSize: { xs: '14px', sm: '16px', md: '20px' },
+                    mt: 10,
+                }}>
                     Explore our specialties
                 </Typography>
                 <ButtonGroup variant="contained" aria-label="Basic button group" sx={{
@@ -72,7 +83,8 @@ const Categories = () => {
                     <Box>
                         <Grid container spacing={2}>
                             <Grid item>
-                                <Button onClick={handleSettingAllMeals}>
+                                <Button onClick={handleSettingAllMeals}
+                                        style={{backgroundColor: selectedCategoryAll ? 'lightgray': ''}}>
                                     All
                                 </Button>
                             </Grid>
@@ -81,6 +93,8 @@ const Categories = () => {
                                     <CategoryData
                                         key={category.id}
                                         category={category}
+                                        selectedCategory={selectedCategory}  // Pass the selected category
+                                        buttonStyle="lightgray"
                                         onCategoryClick={handleCategoryClick}
                                     />
                                 );
@@ -89,11 +103,11 @@ const Categories = () => {
                     </Box>
                 </ButtonGroup>
                 {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-                        <CircularProgress />
+                    <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh'}}>
+                        <CircularProgress/>
                     </Box>
                 ) : (
-                    <CategoryMealData meals={meals} />
+                    <CategoryMealData meals={meals}/>
                 )}
             </Box>
         </main>
