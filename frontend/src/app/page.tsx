@@ -2,6 +2,7 @@ import {Meal} from "../../../backend/dist/meals/meal.model";
 import {saveAllMealsFromCategories} from "./utils/meals.utils";
 // import {useAuth} from "../context/auth.context";
 import Image from "next/image";
+import HomePage from "./components/HomePage/HomePage";
 
 export default async function Home() {
 
@@ -14,24 +15,14 @@ export default async function Home() {
     }
 
     // const {user, token, login, logout, fetchShoppingCart} = useAuth();
-    if(true) {
+    if (true) {
     }
 
     return (
         <>
             <main>
                 <div>
-                    <h1>Home</h1>
-                    <div>
-                        {/*{console.log(user)}*/}
-                        {/*{console.log(token)}*/}
-                    </div>
-                    {/*<Link href={"/categories"}>*/}
-                    {/*  Go to Categories page*/}
-                    {/*</Link>*/}
-                    <div className={""}>
-
-                    </div>
+                    <HomePage/>
                 </div>
             </main>
         </>

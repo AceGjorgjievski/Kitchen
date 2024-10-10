@@ -55,6 +55,15 @@ const useStyles = makeStyles((theme) => ({
         outline: 'none',
         maxWidth: '1000px'
     },
+    homepage: {
+        height: "70vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: "40px",
+        marginRight: "20px",
+    }
 }));
 
 export default useStyles;
