@@ -70,7 +70,12 @@ const Orders = () => {
     return (
         <>
             <Box sx={{mt: 12, textDecoration: "none"}}>
-                <Typography className={classes.textSmall}>
+                <Typography className={classes.textSmall} sx={{
+                    color: 'whitesmoke',
+                    fontFamily: 'Montserrat',
+                    fontSize: { xs: '14px', sm: '16px', md: '20px' },
+                    mt: 10,
+                }}>
                     Your current order list
                 </Typography>
             </Box>

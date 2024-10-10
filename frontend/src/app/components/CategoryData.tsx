@@ -8,12 +8,15 @@ interface CategoryDataProps {
     onCategoryClick: (strCategory: string) => {};
 }
 
-const CategoryData = ({ category, onCategoryClick }: CategoryDataProps) => {
+const CategoryData = ({ category, onCategoryClick, selectedCategory, buttonStyle }: CategoryDataProps) => {
+
+    const isSelected = selectedCategory === category.strCategory;
+    const buttonColor = isSelected ? buttonStyle : '';
 
     return (
         <>
             <Grid item>
-                <Button onClick={() => onCategoryClick(category.strCategory)}>
+                <Button onClick={() => onCategoryClick(category.strCategory)} style={{backgroundColor: `${buttonColor}`}}>
                     {category.strCategory}
                 </Button>
             </Grid>
