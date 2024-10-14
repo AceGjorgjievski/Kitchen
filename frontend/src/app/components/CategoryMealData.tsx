@@ -89,7 +89,7 @@ const CategoryMealData = ({meals}: CategoryMealDataProps) => {
                                     />
                                     <CardContent className={classes.cardContent}>
                                         <Typography gutterBottom variant="h5">
-                                            Name of the meal:
+                                            {meal.strMeal}
                                         </Typography>
                                         <Typography variant="h6">
                                             Price: ${meal.price}
